@@ -59,13 +59,18 @@
                         <textarea asp-for="Product.ProductDescription" class="form-control" rows="4"></textarea>
                         <span asp-validation-for="Product.ProductDescription" class="text-danger"></span>
                     </div>
+                    @* upload img  *@
                     <div class="form-group">
                         <label class="control-label">Hình ảnh</label>
                         <input type="hidden" id="imgUploadCount" name="imgUploadCount" value="1">
-                        <div id="imgContainer">
-                            <input style="margin-top: 4px;" id="imgUpload1" name="file[]" type="file"
-                                accept=".jpg,.gif,.png">
+
+                        <div id="imgContainer" class="preview">
+                            <input style="margin-top: 4px;" id="imgUpload1" name="file[]" type="file" accept=".jpg,.gif,.png">
                         </div>
+
+                        <!-- Preview ảnh -->
+                        <div id="preview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;"></div>
+
                         @if (TempData["ImageError"] != null)
                         {
                             <span class="text-danger">@TempData["ImageError"]</span>
@@ -130,33 +135,130 @@
 
 @section Scripts {
     <script>
-        document.getElementById('imgUpload1').oninput = function () {
-            var container = document.getElementById('imgContainer');
-            var imgUploadCount = document.getElementById('imgUploadCount');
-            var count = parseInt(imgUploadCount.value);
-            //--Tạo file input mới
-            var newInput = document.createElement('input');
-            newInput.id = 'imgUpload' + (count + 1);
-            newInput.name = 'file[]';
-            newInput.type = 'file';
-            newInput.accept = '.jpg,.gif,.png';
-            newInput.style.marginTop = '4px';
-            //--*
-            //--Tạo nút xóa
-            var remove = document.createElement('button');
-            remove.innerHTML = 'X';
-            remove.style.float = 'right';
-            remove.onclick = function () {
-                container.removeChild(document.getElementById('imgUpload' + count));
-                container.removeChild(remove);
+    const preview = document.getElementById('preview');
+    const container = document.getElementById('imgContainer');
+    const imgUploadCount = document.getElementById('imgUploadCount');
+    let fileMap = [];
+
+    // === HÀM HIỂN THỊ PREVIEW ===
+    function renderPreview() {
+        preview.innerHTML = '';
+        fileMap.forEach((item, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgBox = document.createElement('div');
+                imgBox.classList.add('img-box');
+                imgBox.style.position = 'relative';
+                imgBox.style.display = 'inline-block';
+                imgBox.style.textAlign = 'center';
+                imgBox.innerHTML = `
+                    <img src="${e.target.result}" 
+                         style="width:100px;height:100px;object-fit:cover;border-radius:6px;border:1px solid #ccc;">
+                    <div style="font-size:12px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.file.name}</div>
+                    <button class="remove-btn" 
+                            data-index="${index}" 
+                            style="position:absolute;top:2px;right:2px;background:red;color:white;border:none;border-radius:50%;cursor:pointer;width:22px;height:22px;">&times;</button>
+                `;
+                preview.appendChild(imgBox);
             };
-            //--*
-            container.prepend(newInput, remove);
-            //--Điều chỉnh cho lần tạo tiếp theo
-            imgUploadCount.value = count + 1;
-            newInput.oninput = this.oninput;
-            this.oninput = null;
-            //--
+            reader.readAsDataURL(item.file);
+        });
+    }
+
+    // === HÀM KIỂM TRA FILE HỢP LỆ ===
+    function validateFiles(files) {
+        const validExtensions = ['jpg', 'jpeg', 'png'];
+        const maxSizeMB = 5;
+
+        for (const file of files) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const sizeMB = file.size / (1024 * 1024);
+
+            if (!validExtensions.includes(ext)) {
+                alert(`❌ File "${file.name}" không đúng định dạng (.jpg, .jpeg, .png)!`);
+                return false;
+            }
+
+            if (sizeMB > maxSizeMB) {
+                alert(`⚠️ File "${file.name}" vượt quá dung lượng 5MB!`);
+                return false;
+            }
         }
-    </script>
+        return true;
+    }
+
+    // === XỬ LÝ KHI NGƯỜI DÙNG CHỌN ẢNH ===
+    document.getElementById('imgUpload1').oninput = function () {
+        const count = parseInt(imgUploadCount.value);
+        const newFiles = Array.from(this.files);
+
+        // Kiểm tra hợp lệ
+        if (!validateFiles(newFiles)) {
+            this.value = '';
+            return;
+        }
+
+        // Thêm file vào danh sách
+        newFiles.forEach(file => {
+            fileMap.push({ file, inputId: this.id });
+        });
+        renderPreview();
+
+        // Giới hạn tối đa 5 ảnh
+        if (fileMap.length >= 5) {
+            alert("Chỉ được chọn tối đa 5 ảnh!");
+            return;
+        }
+
+        // Tạo input mới
+        const newInput = document.createElement('input');
+        newInput.id = 'imgUpload' + (count + 1);
+        newInput.name = 'file[]';
+        newInput.type = 'file';
+        newInput.accept = '.jpg,.jpeg,.png';
+        newInput.style.marginTop = '4px';
+
+        // Nút xóa input
+        const remove = document.createElement('button');
+        remove.innerHTML = 'X';
+        remove.type = 'button';
+        remove.style.float = 'right';
+        remove.style.marginLeft = '5px';
+        remove.style.background = '#ccc';
+        remove.style.color = 'white';
+        remove.style.border = 'none';
+        remove.style.borderRadius = '3px';
+        remove.style.cursor = 'pointer';
+
+        remove.onclick = function (event) {
+            event.preventDefault();
+            container.removeChild(newInput);
+            container.removeChild(remove);
+            fileMap = fileMap.filter(f => f.inputId !== newInput.id);
+            renderPreview();
+        };
+
+        container.prepend(newInput, remove);
+        imgUploadCount.value = count + 1;
+        newInput.oninput = this.oninput;
+        this.oninput = null;
+    };
+
+    // === XÓA ẢNH Ở PREVIEW VÀ INPUT LIÊN QUAN ===
+    preview.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-btn')) {
+            const index = e.target.getAttribute('data-index');
+            const targetInputId = fileMap[index].inputId;
+            fileMap.splice(index, 1);
+            renderPreview();
+
+            const inputToRemove = document.getElementById(targetInputId);
+            const nextSibling = inputToRemove?.nextSibling;
+            if (inputToRemove) {
+                container.removeChild(inputToRemove);
+                if (nextSibling?.tagName === 'BUTTON') container.removeChild(nextSibling);
+            }
+        }
+    });
+</script>
 }
