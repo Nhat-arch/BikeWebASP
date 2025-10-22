@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["title"]</title>
+
+    <partial name="Partial/head" />
+</head>
+
+<body>
+    <div id="wrapper">
+        <partial name="Partial/sidebar" />
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <partial name="Partial/header" model='ViewData["title"]' />
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+    @RenderSection("Scripts",required: false)
+    <partial name="Partial/script"></partial>
+</body>
+
+</html>

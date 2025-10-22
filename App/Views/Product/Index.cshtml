@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Product Page";
+}
+@section Background {
+    <div class="banner-bg banner-sec">
+}
+    <div class="bikes">
+        <div class="mountain-sec">
+            <h2>DANH SÁCH SẢN PHẨM</h2>
+            @await Component.InvokeAsync("Product")
+            <div class="clearfix"></div>
+        </div>
+    </div>

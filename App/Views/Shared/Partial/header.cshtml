@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <a asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" alt="" /></a>
+        </div>
+        <div class="top-nav">
+            <label class="mobile_menu" for="mobile_menu">
+                <span>Menu</span>
+            </label>
+            <input id="mobile_menu" type="checkbox">
+            <ul class="nav">
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="dropdown1"><a asp-controller="Product" asp-action="Index">Products</a>
+                    <ul class="dropdown2">
+                        <li><a asp-controller="Product" asp-action="Index">FIXED / SINGLE SPEED</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">CITY BIKES</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">PREMIMUN SERIES</a></li>
+                    </ul>
+                </li>
+                @if (Context.Session.GetInt32("_role") == null)
+                {
+                    <li><a asp-controller="Home" asp-action="Login">Đăng nhập</a></li>
+                }
+                else
+                {
+                    <li class="dropdown1">
+                        <a href="#">@Context.Session.GetString("_user")</a>
+                        <ul class="dropdown2">
+                            @if (Context.Session.GetInt32("_role") <= 2)
+                            {
+                                <li><a asp-controller="Admin" asp-action="Index">Admin Dashboard</a></li>
+                            }
+                            <li><a asp-controller="Home" asp-action="Logout">Logout</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

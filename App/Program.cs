@@ -1,0 +1,48 @@
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.Configure<App.Poco.FileUploadSettings>(builder.Configuration.GetSection("FileUploadSettings"));
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(500);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapStaticAssets();
+
+app.UseStaticFiles();
+
+app.UseSession();
+
+//Middleware
+app.UseMiddleware<App.Middleware.CheckLoginMiddleware>();
+
+
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
+app.Run();

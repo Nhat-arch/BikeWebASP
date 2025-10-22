@@ -1,0 +1,33 @@
+@model App.Models.ProductViewModel
+@foreach (var item in Model.ProductList)
+{
+    <a href="/Product/Details/@item.ProductId">
+        <div class="bike">
+            <img style="object-fit: cover; height: 195px;" src="@Url.Content(Model.ImageList.LastOrDefault(i => i.ProductId == item.ProductId)?.ImagePath)"
+                alt="@item.ProductName" />
+
+            <div class="bike-cost">
+                <div class="bike-mdl">
+                    <h4>@item.ProductName <span>item: @item.ProductId</span></h4>
+                </div>
+
+                <div class="bike-cart">
+                    <span class="price">
+                        <p>
+                            <label>$</label>
+                            @item.ProductPrice.ToString("N0") đ
+                            <br />
+                        </p>
+                    </span>
+                    <a class="buy" href="/User/Cart/Add/@item.ProductId">BUY NOW</a>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="fast-viw">
+                <a class="morebtn" href="/Product/Details/@item.ProductId">Quick View</a>
+            </div>
+        </div>
+    </a>
+}

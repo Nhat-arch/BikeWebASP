@@ -1,0 +1,58 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model App.Models.ProductViewModel;
+@{
+    ViewData["title"] = "Trang quản lý sản phẩm";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Danh sách sản phẩm
+                    <span>
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="Product"
+                            asp-action="ProductAdd">Thêm sản phẩm</a>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                            <th>Brand</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Image</th>
+                            <th>Views</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.ProductList)
+                        {
+                            <tr>
+                                <td>@product.ProductId</td>
+                                <td>@product.ProductName</td>
+                                <td>
+                                    @Model.BrandList.FirstOrDefault(b => b.BrandId == product.BrandId)?.BrandName
+                                </td>
+                                <td>
+                                    @Model.TypeList.FirstOrDefault(t => t.TypeId == product.TypeId)?.TypeName
+                                </td>
+                                <td>@product.ProductPrice.ToString()</td>
+                                <td>@product.ProductDescription</td>
+                                <td><img src="@Url.Content(Model.ImageList.LastOrDefault(i => i.ProductId == product.ProductId)?.ImagePath)"
+                                        style="width: 50px; height: auto;" /></td>
+                                <td>@product.LuotXem</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

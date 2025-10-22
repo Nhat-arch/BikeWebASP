@@ -1,0 +1,33 @@
+@model App.Models.UserModel;
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+@section Background {
+    <div class="banner-bg banner-sec">
+}
+    <div class="categories">
+        <h3>Đăng nhập</h3>
+        <div class="categorie-grids">
+            <form asp-action="Login" method="post">
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input type="text" asp-for="Username" class="form-control" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input type="password" asp-for="Password" class="form-control" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                @if (TempData["Login"] != null)
+                {
+                    <p class="text-danger">@TempData["Login"]</p>
+                }
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Đăng nhập</button>
+                    <a asp-controller="Home" asp-action="Register">Đăng ký</a>
+                </div>
+            </form>
+        </div>
+    </div>
