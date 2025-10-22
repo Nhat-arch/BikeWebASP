@@ -38,6 +38,11 @@ public class HomeController : Controller
         }
         return RedirectToAction("Index");
     }
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Login");
+    }
     public IActionResult Register()
     {
         return View();
