@@ -1,7 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<App.Data.BikeContext>(option=> option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.Configure<App.Poco.FileUploadSettings>(builder.Configuration.GetSection("FileUploadSettings"));
 builder.Services.AddSession(options =>
 {

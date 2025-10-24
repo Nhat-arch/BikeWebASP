@@ -1,32 +1,32 @@
-@model App.Models.ProductViewModel
-@foreach (var item in Model.ProductList)
+@model IEnumerable<App.Models.ProductModel>
+@foreach (var item in Model)
 {
-    <a href="/Product/Details/@item.ProductId">
+    <a href="/Product/Details/@item.Id">
         <div class="bike">
-            <img style="object-fit: cover; height: 195px;" src="@Url.Content(Model.ImageList.LastOrDefault(i => i.ProductId == item.ProductId)?.ImagePath)"
-                alt="@item.ProductName" />
+            <img style="object-fit: cover; height: 195px;" src="@Url.Content(item.Images.LastOrDefault(i => i.Id == item.Id)?.ImagePath)"
+                alt="@item.Name" />
 
             <div class="bike-cost">
                 <div class="bike-mdl">
-                    <h4>@item.ProductName <span>item: @item.ProductId</span></h4>
+                    <h4>@item.Name <span>item: @item.Id</span></h4>
                 </div>
 
                 <div class="bike-cart">
                     <span class="price">
                         <p>
                             <label>$</label>
-                            @item.ProductPrice.ToString("N0") đ
+                            @item.Price.ToString("N0") đ
                             <br />
                         </p>
                     </span>
-                    <a class="buy" href="/User/Cart/Add/@item.ProductId">BUY NOW</a>
+                    <a class="buy" href="/User/Cart/Add/@item.Id">BUY NOW</a>
                 </div>
 
                 <div class="clearfix"></div>
             </div>
 
             <div class="fast-viw">
-                <a class="morebtn" href="/Product/Details/@item.ProductId">Quick View</a>
+                <a class="morebtn" href="/Product/Details/@item.Id">Quick View</a>
             </div>
         </div>
     </a>

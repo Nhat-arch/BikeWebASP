@@ -1,6 +1,4 @@
-@using Microsoft.AspNetCore.Mvc.Rendering
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model App.Models.ProductViewModel;
+@model IEnumerable<App.Models.ProductModel>;
 @{
     ViewData["title"] = "Trang quản lý sản phẩm";
 }
@@ -12,8 +10,8 @@
                 <h3 class="panel-title">
                     Danh sách sản phẩm
                     <span>
-                        <a class="btn btn-primary" asp-area="Admin" asp-controller="Product"
-                            asp-action="ProductAdd">Thêm sản phẩm</a>
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="item"
+                            asp-action="itemAdd">Thêm sản phẩm</a>
                     </span>
                 </h3>
             </div>
@@ -21,8 +19,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Product ID</th>
-                            <th>Product Name</th>
+                            <th>item ID</th>
+                            <th>item Name</th>
                             <th>Brand</th>
                             <th>Type</th>
                             <th>Price</th>
@@ -32,22 +30,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var product in Model.ProductList)
+                        @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@product.ProductId</td>
-                                <td>@product.ProductName</td>
-                                <td>
-                                    @Model.BrandList.FirstOrDefault(b => b.BrandId == product.BrandId)?.BrandName
-                                </td>
-                                <td>
-                                    @Model.TypeList.FirstOrDefault(t => t.TypeId == product.TypeId)?.TypeName
-                                </td>
-                                <td>@product.ProductPrice.ToString()</td>
-                                <td>@product.ProductDescription</td>
-                                <td><img src="@Url.Content(Model.ImageList.LastOrDefault(i => i.ProductId == product.ProductId)?.ImagePath)"
+                                <td>@item.Id</td>
+                                <td>@item.Name</td>
+                                <td>@item.Brand.Name</td>
+                                <td>@item.Type.Name</td>
+                                <td>@item.Price.ToString()</td>
+                                <td>@item.Description</td>
+                                <td><img src="@Url.Content(item.Images.LastOrDefault(i => i.Id == item.Id)?.ImagePath)"
                                         style="width: 50px; height: auto;" /></td>
-                                <td>@product.LuotXem</td>
+                                <td>@item.LuotXem</td>
                             </tr>
                         }
                     </tbody>
