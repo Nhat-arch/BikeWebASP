@@ -84,7 +84,7 @@
 //                 if (file != null && file.Length > 0)
 //                 {
 //                     var fileName = Path.GetRandomFileName() + Path.GetExtension(file.FileName); //Tạo tên file
-//                     var filePath = Path.Combine(targetFolder, fileName); //Tạo đường dẫn
+//                     var filePath = Path.Combine(targetFolder, fileName).Replace("\\", "/"); //Tạo đường dẫn
 //                     //--Lưu file vào thư mục
 //                     using (var stream = System.IO.File.Create(filePath))
 //                     {
