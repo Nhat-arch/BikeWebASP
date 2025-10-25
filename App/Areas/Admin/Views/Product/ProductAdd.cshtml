@@ -92,8 +92,8 @@
                 <form id="form3" asp-area="Admin" asp-controller="Product" asp-action="BrandAdd" method="post">
                     <div class="form-group">
                         <label class="control-label">Thêm hãng sản xuất</label>
-                        <input asp-for="Brand.Name" type="text" class="form-control" />
-                        <span asp-validation-for="Brand.Name" class="text-danger"></span>
+                        <input id="brandName" asp-for="Brand.Name" type="text" class="form-control" />
+                        <span id="brandSuccess" asp-validation-for="Brand.Name" class="text-danger"></span>
                         @if (TempData["BrandSuccess"] != null)
                         {
                             <span class="text-success">
@@ -114,8 +114,8 @@
                 <form id="form2" asp-area="Admin" asp-controller="Product" asp-action="TypeAdd" method="post">
                     <div class="form-group">
                         <label class="control-label">Thêm loại sản phẩm </label>
-                        <input asp-for="Type.Name" type="text" class="form-control" />
-                        <span asp-validation-for="Type.Name" class="text-danger"></span>
+                        <input id="typeName" asp-for="Type.Name" type="text" class="form-control" />
+                        <span id="typeSuccess" asp-validation-for="Type.Name" class="text-danger"></span>
                         @if (TempData["TypeSuccess"] != null)
                         {
                             <span class="text-success">
