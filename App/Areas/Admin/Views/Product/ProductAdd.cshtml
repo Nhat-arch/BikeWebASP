@@ -62,10 +62,9 @@
                     @* upload img  *@
                     <div class="form-group">
                         <label class="control-label">Hình ảnh</label>
-                        <input type="hidden" id="imgUploadCount" name="imgUploadCount" value="1">
+                        <input type="hidden" id="imgUploadCount" name="imgUploadCount" value="0">
 
                         <div id="imgContainer" class="preview" style="display:none;">
-                            <input style="margin-top: 4px;" id="imgUpload1" name="file[]" type="file" accept=".jpg,.gif,.png">
                         </div>
 
                         <!-- Preview ảnh -->
@@ -152,36 +151,31 @@
     newInput.type = "file";
     newInput.name = "file[]";
     newInput.accept = ".jpg,.jpeg,.png";
-    newInput.id = "imgUpload" + (count + 1);
     newInput.style.display = "none";
 
     // Khi người dùng chọn file
     newInput.addEventListener("change", function () {
       const file = this.files[0];
       if (!file) return;
-
-      // ✅ Kiểm tra định dạng file
+      // Kiểm tra định dạng file
       const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
       if (!allowedTypes.includes(file.type)) {
-        alert("❌ Chỉ chấp nhận file .jpg, .jpeg, .png");
+        alert("Chỉ chấp nhận file .jpg, .jpeg, .png");
         this.value = "";
         return;
       }
-
-      // ✅ Kiểm tra kích thước file (tối đa 5MB)
+      // Kiểm tra kích thước file (tối đa 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("❌ Kích thước file không được vượt quá 5MB!");
+        alert("Kích thước file không được vượt quá 5MB!");
         this.value = "";
         return;
       }
-
       // Thêm file vào danh sách và hiển thị preview
       selectedFiles.push({ input: this, file });
       renderPreview();
+      imgUploadCount.value = count + 1;
     });
-
     imgContainer.appendChild(newInput);
-    imgUploadCount.value = count + 1;
     newInput.click(); // tự động mở hộp thoại chọn ảnh
   });
 
